@@ -1,8 +1,8 @@
+
 const express=require('express');
 const app=express();
-const dotenv=require('dotenv');
-dotenv.config();
-const port=process.env.PORT||7000;
-app.listen(port,()=>{
-    console.log(`server is running on port ${port}`)
-})
+const Flightrouter=require('./routers/flightRouter')
+app.use(express.json());
+app.use('/api/v1/flights',Flightrouter);
+
+module.exports=app;
