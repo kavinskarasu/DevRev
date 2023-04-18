@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const flightSchema=new mongoose.Schema({
     flightNumber: {
-        type: String,
+        type: Number,
         required: true,
       },
     airLine:{
