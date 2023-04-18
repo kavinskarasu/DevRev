@@ -7,11 +7,22 @@ const UserSchema=new mongoose.Schema({
     },
     email:{
         type:String,
-        required:[true,'Please provide your email']
+        required:[true,'Please provide your email'],
+        unique:true,
+        lowercase:true,
+        validate:[validator.isEmail,'Please provide the valid email']
     },
     password:{
         type:String,
-        required:[true,]
+        required:[true,'Please provide a password'],
+        minlen:8   
+    },
+    passwordConfirm:{
+        type:String ,
+        required:[true,'Please confirm password']
     }
 
 })
+const User=mongoose.model('User',UserSchema);
+
+module.exports=User;
