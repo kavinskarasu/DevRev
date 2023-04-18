@@ -19,7 +19,16 @@ const UserSchema=new mongoose.Schema({
     },
     passwordConfirm:{
         type:String ,
-        required:[true,'Please confirm password']
+        required:[true,'Please confirm password'],
+        validate:{
+            validator:function(el){
+                return el===this.password
+            }
+        }
+    },
+    role:{
+        type:String,
+        default:"user"
     }
 
 })
