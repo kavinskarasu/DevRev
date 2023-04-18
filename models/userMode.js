@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
-const validator=require('validator')
+const validator=require('validator');
+const bcrypt=require('bcryptjs')
 const UserSchema=new mongoose.Schema({
     name:{
         type:String,
@@ -15,7 +16,7 @@ const UserSchema=new mongoose.Schema({
     password:{
         type:String,
         required:[true,'Please provide a password'],
-        minlen:8   
+        minlen:5
     },
     passwordConfirm:{
         type:String ,
@@ -30,6 +31,13 @@ const UserSchema=new mongoose.Schema({
         type:String,
         default:"user"
     }
+
+})
+UserSchema.pre('save',async function(next){
+    if(!this.isModified('password'))next();
+    this.password=await bcrypt.hash(this.password,12);
+    this.passwordConfirm=undefined;
+    next();
 
 })
 const User=mongoose.model('User',UserSchema);
