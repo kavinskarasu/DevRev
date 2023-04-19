@@ -40,6 +40,10 @@ UserSchema.pre('save',async function(next){
     next();
 
 })
+
+UserSchema.methods.verifyPassword=(candidatedPassword,userPassword)=>{
+    return bcrypt.compare(candidatedPassword,userPassword);
+}
 const User=mongoose.model('User',UserSchema);
 
 module.exports=User;
