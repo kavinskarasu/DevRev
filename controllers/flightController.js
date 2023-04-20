@@ -1,8 +1,20 @@
 const Flights=require('../models/flightMode');
-
+const User=require('../models/userMode')
 
 exports.createFlight=async(req,res)=>{
    
+    let user= await User.findById(req.user._id);
+   
+   
+    if(user.role=="user"){
+        
+        res.status(401).json({
+            status:"failue",
+            message:"Only admin can access"
+        })
+        
+    }
+
     try{
         const {flightNumber,airLine,origin,destination,depatureTime,arrivalTime}=req.body;
         

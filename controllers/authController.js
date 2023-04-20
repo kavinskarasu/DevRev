@@ -1,4 +1,5 @@
 const User=require('../models/userMode');
+const{Promifiy, promisify}=require('util')
 const jwt=require('jsonwebtoken');
 const jwtTokenSign=async (id)=>{
     
@@ -58,4 +59,46 @@ exports.login=async(req,res)=>{
     })
 }
 
+}
+
+exports.protect=async(req,res,next)=>{
+    let token;
+   
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+        token=req.headers.authorization.split(' ')[1];
+    }
+    
+    if(!token){
+        res.status(401).json({
+            status:"faliure",
+            message:"Please login to access this route"
+        })
+      return;
+    }
+    
+    try{
+        
+    const decoded= await promisify(jwt.verify)(token,process.env.JWT_SECRECT);
+        const validUser= await User.findById(decoded.id);
+       
+       if(!validUser){
+        res.status(401).json({
+            status:"failure",
+            message:"User belonging to the token does not exit"
+        })
+         return;
+       }
+       req.user=validUser;
+          console.log(req.user)
+       next();
+    }catch(err){
+        res.status(500).json({
+            status:"faliure",
+            message:"Someting went Wrong",
+            err
+        })
+        return;
+    }
+   
+   
 }
